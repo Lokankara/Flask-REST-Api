@@ -8,11 +8,19 @@ class TestParaphraseEndpoint(unittest.TestCase):
         self.app = app.test_client()
 
     def test_paraphrase_endpoint_success(self):
-        tree_str = "(S (NP (DT The) (NN cat)) (VP (VBD sat) (PP (IN on) (NP (DT a) (NN mat)))))"
-        expected = {"paraphrases": [{"tree": "(S (NP (DT a) (NN mat)) (VP (VBD sat) (PP (IN on) (NP (DT The) (NN cat)))))"}]}
-        response = self.app.get(f"/paraphrase?tree={tree_str}&limit=1")
-        self.assertEqual(response.status_code, 200)
-        self.assertDictEqual(response.json, expected)
+        expected = {
+            "paraphrases": [
+                {"tree": "(S (NP (DT the) (NN cat)) (VP (VBD sat) (PP (IN on) (NP (DT the) (NN mat)))))"},
+                {"tree": "(S (NP (DT the) (NN mat)) (VP (VBD was) (VP (VBN sat) (PP (IN on) (NP (DT by) (DT the) (NN cat))))))"},
+                {"tree": "(S (NP (DT the) (NN cat)) (VP (VBD sat) (PP (IN on) (NP (DT the) (NN rug)))))"},
+                {"tree": "(S (NP (DT the) (NN rug)) (VP (VBD was) (VP (VBN sat) (PP (IN on) (NP (DT by) (DT the) (NN cat))))))"},
+                {"tree": "(S (NP (DT the) (NN mat)) (VP (VBD was) (VP (VBN sat) (PP (IN on) (NP (DT by) (DT the) (NN cat))))))"},
+                {"tree": "(S (NP (DT the) (NN rug)) (VP (VBD was) (VP (VBN sat) (PP (IN on) (NP (DT by) (DT the) (NN cat))))))"}
+            ]
+        }
+        tree_str = "(S (NP (DT the) (NN cat)) (VP (VBD sat) (PP (IN on) (NP (DT the) (NN mat)))))"
+        response = self.app.get(f"/paraphrase?tree={tree_str}&limit=6")
+        assert expected == response.json
 
     def test_paraphrase_endpoint_error(self):
         expected = {"error": "Missing \"tree\" parameter."}
