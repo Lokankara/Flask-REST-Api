@@ -53,20 +53,6 @@ def find_np_subtree(tree, np_str):
             return subtree
     return None
 
-# def generate_paraphrases(tree, nps, limit):
-#     paraphrases = set()
-#     for i, np1 in enumerate(nps):
-#         for j, np2 in enumerate(nps[i+1:], i+1):
-#             new_tree = tree.copy(deep=True)
-#             np1_subtree, np2_subtree = find_np_subtrees(new_tree, np1, np2)
-#             if np1_subtree and np2_subtree:
-#                 swap_nps(np1_subtree, np2_subtree)
-#                 paraphrased_tree = str(new_tree)
-#                 paraphrases.add(paraphrased_tree)
-#                 if len(paraphrases) >= limit:
-#                     return paraphrases
-#     return paraphrases
-
 def find_np_subtrees(tree, np1, np2):
     np1_subtree = None
     np2_subtree = None
