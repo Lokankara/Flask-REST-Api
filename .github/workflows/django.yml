@@ -27,4 +27,4 @@ jobs:
         pip install -r requirements.txt
         pip install gunicorn
     - name: Run Tests
-      run: gunicorn app:app
+      run: python -m unittest discover
