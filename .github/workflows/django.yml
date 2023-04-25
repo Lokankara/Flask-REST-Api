@@ -27,5 +27,4 @@ jobs:
         pip install -r requirements.txt
         pip install gunicorn
     - name: Run Tests
-      run: |
-        python gunicorn app:app
+      run: gunicorn app:app
