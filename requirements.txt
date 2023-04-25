@@ -4,3 +4,4 @@ gunicorn==20.1.0
 requests==2.25.1
 virtualenv==20.8.0
 virtualenvwrapper-win==1.2.6
+Werkzeug==2.1.0
