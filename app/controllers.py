@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, send_from_directory, render_template
 from models import db, TestRecord
+from sqlalchemy.exc import SQLAlchemyError
 
 main = Blueprint('main', __name__)
 
@@ -12,11 +13,17 @@ def get_all_jsons():
 
 @main.route('/json', methods=['POST'])
 def create_record():
-    data = request.json
-    new_record = TestRecord(**data)
-    db.session.add(new_record)
-    db.session.commit()
-    return jsonify({"message": "Record created", "uuid": new_record.uuid}), 201
+    try:
+        data = request.json
+        new_record = TestRecord(**data)
+        db.session.add(new_record)
+        db.session.commit()
+        return jsonify({"message": "Record created", "uuid": new_record.uuid}), 201
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @main.route('/json/<uuid>', methods=['GET'])

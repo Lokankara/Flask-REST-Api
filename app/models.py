@@ -1,6 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, inspect
+from config import Config
+import logging
 
 db = SQLAlchemy()
+inspector = inspect(create_engine(Config.SQLALCHEMY_DATABASE_URI))
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class TestRecord(db.Model):
@@ -38,3 +44,10 @@ class TestRecord(db.Model):
             'start': self.start,
             'stop': self.stop,
         }
+
+
+logger.info(inspector.get_table_names())
+
+columns = inspector.get_columns('allure_tekg')
+for column in columns:
+    logger.info(column)
