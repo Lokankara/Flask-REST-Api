@@ -1,0 +1,67 @@
+{
+  "uuid": "30d18f57-e998-414a-bb3b-9d0835827e50",
+  "historyId": "bae45a7dba3a71bcec3852f46c6104fc",
+  "fullName": "school.redrover.APITest.restAssuredAllureTest",
+  "labels": [
+    {
+      "name": "package",
+      "value": "school.redrover.APITest"
+    },
+    {
+      "name": "testClass",
+      "value": "school.redrover.APITest"
+    },
+    {
+      "name": "testMethod",
+      "value": "restAssuredAllureTest"
+    },
+    {
+      "name": "parentSuite",
+      "value": "Default Suite"
+    },
+    {
+      "name": "suite",
+      "value": "JenkinsQA_2024"
+    },
+    {
+      "name": "subSuite",
+      "value": "school.redrover.APITest"
+    },
+    {
+      "name": "host",
+      "value": "DESKTOP-0C5D7A9"
+    },
+    {
+      "name": "thread",
+      "value": "11180@DESKTOP-0C5D7A9.main(1)"
+    },
+    {
+      "name": "framework",
+      "value": "testng"
+    },
+    {
+      "name": "language",
+      "value": "java"
+    },
+    {
+      "name": "epic",
+      "value": "APITest"
+    }
+  ],
+  "links": [],
+  "name": "restAssuredAllureTest",
+  "status": "broken",
+  "statusDetails": {
+    "known": false,
+    "muted": false,
+    "flaky": false,
+    "message": "Resource not found: 0006a62d-f6ed-49ae-875d-0d77bce18f78-result.json",
+    "trace": "java.lang.IllegalArgumentException: Resource not found: n"
+  },
+  "stage": "finished",
+  "steps": [],
+  "attachments": [],
+  "parameters": [],
+  "start": 1722783310553,
+  "stop": 1722783310582
+}

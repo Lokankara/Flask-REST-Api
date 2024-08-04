@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 expected_schema = {
@@ -10,11 +12,11 @@ expected_schema = {
     "status": str,
     "statusDetails": dict,
     "stage": str,
-    "description": str,
     "steps": list
 }
 
-BASE_URL = 'https://flask-rest-api-ysf4.onrender.com'
+# BASE_URL = 'https://flask-rest-api-ysf4.onrender.com'
+BASE_URL = 'http://127.0.0.1:5000'
 
 
 def test_allure_health_get_all():
@@ -24,29 +26,26 @@ def test_allure_health_get_all():
 
 
 def test_create_record_success():
-    payload = {
-        "uuid": "test-uuid",
-        "historyid": "test-history-id",
-        "fullname": "Test Full Name",
-        "labels": {"label1": "value1"},
-        "name": "Test Name",
-        "status": "passed",
-        "statusdetails": {"detail1": "value1"},
-        "stage": "completed",
-        "description": "Test Description",
-        "steps": [{"step1": "action1"}],
-        "attachments": [{"type": "image", "url": "http://example.com/image.png"}],
-        "parameters": {"param1": "value1"},
-        "start": 1234567890,
-        "stop": 1234567891
-    }
+    url = BASE_URL + '/json'
 
-    response = create_record(payload)
-    # assert response.status_code == 201
-    # response_json = response.json()
-    # assert response_json["message"] == "Record created"
-    # assert response_json["uuid"] == "test-uuid"
+    with open('json/post.json', 'r') as file:
+        payload = json.load(file)
+
+    response = requests.post(url, json=payload)
+
+    assert response.status_code == 201, f"Expected 201 but got {response.status_code}"
 
 
-def create_record(data):
-    return requests.post(BASE_URL, json=data)
+def test_delete_record_success():
+    url = f'{BASE_URL}/json'
+
+    with open('json/post.json', 'r') as file:
+        uuid = json.load(file)["uuid"]
+
+    response = requests.delete(f'{url}/{uuid}')
+
+    assert response.status_code != 500, f"Expected status code to be not 500, but got {response.status_code}"
+    assert response.status_code == 200
+
+    response_check = requests.get(f'{url}/{uuid}')
+    assert response_check.status_code == 404
