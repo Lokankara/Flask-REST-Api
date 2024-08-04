@@ -26,8 +26,9 @@ def test_allure_health_get_all():
 
 def test_create_record_success():
     url = BASE_URL + '/json'
+    print("Current Working Directory:", os.getcwd())
 
-    file_path = os.path.join(os.path.dirname(__file__), 'json/post.json')
+    file_path = os.path.join(os.path.dirname(__file__), 'json', 'post.json')
 
     with open(file_path, 'r') as file:
         payload = json.load(file)
