@@ -1,5 +1,5 @@
+import os
 import json
-
 import requests
 
 expected_schema = {
@@ -15,8 +15,7 @@ expected_schema = {
     "steps": list
 }
 
-# BASE_URL = 'https://flask-rest-api-ysf4.onrender.com'
-BASE_URL = 'http://127.0.0.1:5000'
+BASE_URL = 'https://flask-rest-api-ysf4.onrender.com'
 
 
 def test_allure_health_get_all():
@@ -28,7 +27,9 @@ def test_allure_health_get_all():
 def test_create_record_success():
     url = BASE_URL + '/json'
 
-    with open('json/post.json', 'r') as file:
+    file_path = os.path.join(os.path.dirname(__file__), 'json/post.json')
+
+    with open(file_path, 'r') as file:
         payload = json.load(file)
 
     response = requests.post(url, json=payload)
