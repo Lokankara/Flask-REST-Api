@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 db = SQLAlchemy()
 
+
 class TestRecord(db.Model):
     __tablename__ = 'allure_tekg'
 
@@ -21,6 +22,24 @@ class TestRecord(db.Model):
     start = db.Column(db.DateTime)
     stop = db.Column(db.DateTime)
     steps = db.relationship('TestStep', backref='test_record', lazy=True)
+
+    def to_dict(self):
+        return {
+            'uuid': self.uuid,
+            'historyId': self.historyid,
+            'fullName': self.fullname,
+            'labels': self.labels,
+            'links': self.links,
+            'name': self.name,
+            'status': self.status,
+            'statusDetails': self.statusdetails,
+            'stage': self.stage,
+            'steps': self.steps,
+            'attachments': self.attachments,
+            'parameters': self.parameters,
+            'start': self.start,
+            'stop': self.stop,
+        }
 
 class TestStep(db.Model):
     __tablename__ = 'test_steps'

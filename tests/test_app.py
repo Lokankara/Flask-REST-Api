@@ -41,8 +41,9 @@ def test_create_record_success():
 def test_delete_record_success():
     url = f'{BASE_URL}/json'
 
-    with open('json/post.json', 'r') as file:
-        uuid = json.load(file)["uuid"]
+    file_path = os.path.join(os.path.dirname(__file__), 'json', 'post.json')
+    with open(file_path, 'r') as file:
+        uuid = json.load(file)['uuid']
 
     response = requests.delete(f'{url}/{uuid}')
 
