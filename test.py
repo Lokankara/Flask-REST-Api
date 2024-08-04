@@ -1,11 +1,11 @@
 import unittest
-from flask import Flask
-from app import app
+from run import run
+
 
 class TestParaphraseEndpoint(unittest.TestCase):
 
     def setUp(self):
-        self.app = app.test_client()
+        self.run = run.test_client()
 
     def test_paraphrase_endpoint_success(self):
         expected = {
@@ -19,12 +19,12 @@ class TestParaphraseEndpoint(unittest.TestCase):
             ]
         }
         tree_str = "(S (NP (DT the) (NN cat)) (VP (VBD sat) (PP (IN on) (NP (DT the) (NN mat)))))"
-        response = self.app.get(f"/paraphrase?tree={tree_str}&limit=6")
+        response = self.run.get(f"/paraphrase?tree={tree_str}&limit=6")
         assert expected == response.json
 
     def test_paraphrase_endpoint_error(self):
         expected = {"error": "Missing \"tree\" parameter."}
-        response = self.app.get("/paraphrase")
+        response = self.run.get("/paraphrase")
         self.assertEqual(response.status_code, 400)
         self.assertDictEqual(response.json, expected)
 
