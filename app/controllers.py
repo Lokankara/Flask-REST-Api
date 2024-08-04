@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, send_from_directory, render_template
-from app.models import db, TestRecord
+from models import db, TestRecord
 
 main = Blueprint('main', __name__)
 
