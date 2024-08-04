@@ -30,4 +30,6 @@ jobs:
         pip install gunicorn
 
     - name: Run Tests
-      run: python -m pytest tests/test_app.py
+      run: |
+        cd ..
+        python -m pytest tests/test_app.py
