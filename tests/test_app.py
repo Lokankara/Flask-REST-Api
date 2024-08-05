@@ -1,7 +1,6 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
-import pytz
 import json
 import requests
 
@@ -134,4 +133,4 @@ def deep_compare(a, b):
 
 def transform(date_string):
     return int(datetime.strptime(date_string, '%a, %d %b %Y %H:%M:%S GMT')
-               .replace(tzinfo=pytz.UTC).timestamp() * 1000)
+               .replace(tzinfo=timezone.utc).timestamp() * 1000)
