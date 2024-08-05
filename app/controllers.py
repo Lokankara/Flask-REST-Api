@@ -7,13 +7,13 @@ from datetime import datetime
 main = Blueprint('main', __name__)
 
 
-@main.route('/jsons', methods=['GET'])
+@main.route('/results', methods=['GET'])
 def get_all_jsons():
     records = TestRecord.query.all()
     return jsonify([record.to_dict() for record in records])
 
 
-@main.route('/json', methods=['POST'])
+@main.route('/result', methods=['POST'])
 def create_record():
     try:
         data = request.get_json()
@@ -54,13 +54,13 @@ def create_record():
         return jsonify({"message": "Error creating record"}), 500
 
 
-@main.route('/json/<uuid>', methods=['GET'])
+@main.route('/result/<uuid>', methods=['GET'])
 def get_record(uuid):
     record = TestRecord.query.get_or_404(uuid)
-    return jsonify(record.as_dict())
+    return jsonify(record.to_dict())
 
 
-@main.route('/json/<uuid>', methods=['PUT'])
+@main.route('/result/<uuid>', methods=['PUT'])
 def update_record(uuid):
     data = request.json
     record = TestRecord.query.get_or_404(uuid)
@@ -70,7 +70,7 @@ def update_record(uuid):
     return jsonify({"message": "Record updated"})
 
 
-@main.route('/json/<uuid>', methods=['DELETE'])
+@main.route('/result/<uuid>', methods=['DELETE'])
 def delete_record(uuid):
     try:
         record = TestRecord.query.filter_by(uuid=uuid).first()
@@ -84,7 +84,7 @@ def delete_record(uuid):
         return jsonify({"message": "Internal server error"}), 500
 
 
-@main.route('/images/<filename>')
+@main.route('/attachments/<filename>')
 def serve_image(filename):
     return send_from_directory('images', filename)
 
