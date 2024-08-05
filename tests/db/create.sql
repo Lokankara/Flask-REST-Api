@@ -21,3 +21,13 @@ CREATE TABLE test_steps (
                             step_description VARCHAR,
                             test_record_uuid UUID REFERENCES allure_tekg(uuid)
 );
+
+CREATE TABLE Container (
+                           uuid UUID PRIMARY KEY,
+                           name VARCHAR(255) NOT NULL,
+                           children UUID[],
+                           befores UUID[],
+                           afters UUID[],
+                           start BIGINT NOT NULL,
+                           stop BIGINT NOT NULL
+);

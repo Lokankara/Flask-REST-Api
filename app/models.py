@@ -1,11 +1,11 @@
-from flask_sqlalchemy import SQLAlchemy
 import uuid
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 db = SQLAlchemy()
 
 
-class TestRecord(db.Model):
+class Result(db.Model):
     __tablename__ = 'allure_tekg'
 
     uuid = db.Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -21,7 +21,7 @@ class TestRecord(db.Model):
     parameters = db.Column(db.JSON)
     start = db.Column(db.DateTime)
     stop = db.Column(db.DateTime)
-    steps = db.relationship('TestStep', backref='test_record', lazy=True)
+    steps = db.relationship('Step', backref='test_record', lazy=True)
 
     def to_dict(self):
         return {
@@ -41,7 +41,8 @@ class TestRecord(db.Model):
             'stop': self.stop,
         }
 
-class TestStep(db.Model):
+
+class Step(db.Model):
     __tablename__ = 'test_steps'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -49,3 +50,24 @@ class TestStep(db.Model):
     step_description = db.Column(db.String)
     test_record_uuid = db.Column(db.UUID(as_uuid=True), db.ForeignKey('allure_tekg.uuid'))
 
+
+class Container(db.Model):
+    __tablename__ = 'containers'
+    uuid = db.Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = db.Column(db.String(100), nullable=False)
+    children = db.Column(db.ARRAY(PG_UUID(as_uuid=True)), nullable=True)
+    befores = db.Column(db.ARRAY(db.String), nullable=True)
+    afters = db.Column(db.ARRAY(db.String), nullable=True)
+    start = db.Column(db.BigInteger, nullable=False)
+    stop = db.Column(db.BigInteger, nullable=False)
+
+    def to_dict(self):
+        return {
+            'uuid': self.uuid,
+            'name': self.name,
+            'children': self.children,
+            'befores': self.befores,
+            'afters': self.afters,
+            'start': self.start,
+            'stop': self.stop
+        }
