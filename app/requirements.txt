@@ -13,7 +13,6 @@ Pillow==9.1.0
 gunicorn==20.1.0
 waitress==3.0.0
 requests==2.25.1
-pytest==7.4.2
 allure-pytest==2.13.5
 allure-python-commons==2.13.5
 selene==2.0.0rc9
