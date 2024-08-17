@@ -1,0 +1,12 @@
+/.git/
+/.github/
+/.idea/
+/.pytest_cache/
+/__pycache__/
+/allure-report/
+/allure-results/
+/driver-report/
+/venv/
+.gitignore
+LICENSE
+README.md
