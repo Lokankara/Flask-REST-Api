@@ -74,105 +74,105 @@ jobs:
             allure-results
           retention-days: 1
 
-  run-test:
-    name: 'Run tests'
-    needs: download-history
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Git clone
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Install python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run tests
-        run: |
-          pytest -n2 --reruns=5
-        env:
-          CI_RUN: true
-          PYTHONDONTWRITEBYTECODE: 1
-          PYTHONUNBUFFERED: 1
-#        continue-on-error: true
-
-      - name: Attach driver page_source and screenshot on failure
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: driver-report
-          path: 
-            driver-report
-          retention-days: 1
-        
-      - name: Store allure results
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: allure-results
-          path:
-            allure-results
-          retention-days: 1
-
-  generate-report:
-    if: always()
-    runs-on: ubuntu-latest
-    needs: run-test
-    name: Generate report
-    steps:
-      - name: Install JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'corretto'
-          java-version: '17'
-
-      - name: Install allure
-        run: |
-          sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && sudo tar -zxvf allure-2.29.0.tgz -C /opt/ && sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
-
-      - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v3
-
-      - name: Run allure generate
-        run: |
-          allure generate -c allure-results -o _site
-
-      - name: Store generated report
-        uses: actions/upload-artifact@v3
-        with:
-          name: _site
-          path:
-            _site
-          retention-days: 1
-
-  publish-report:
-    if: always()
-    runs-on: ubuntu-latest
-    needs: generate-report
-    name: Report publication
-    steps:
-#        only history without content of allure-results
-      - name: Download _site workflow run artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: _site
-          path:
-            _site
-##        full history version with all content of allure-results saved between runs - very slow
+#  run-test:
+#    name: 'Run tests'
+#    needs: download-history
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Git clone
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Install python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: '3.11'
+#
+#      - name: Install requirements
+#        run: |
+#          pip install -r requirements.txt
+#
+#      - name: Run tests
+#        run: |
+#          pytest -n2 --reruns=5
+#        env:
+#          CI_RUN: true
+#          PYTHONDONTWRITEBYTECODE: 1
+#          PYTHONUNBUFFERED: 1
+##        continue-on-error: true
+#
+#      - name: Attach driver page_source and screenshot on failure
+#        uses: actions/upload-artifact@v4
+#        if: failure()
+#        with:
+#          name: driver-report
+#          path:
+#            driver-report
+#          retention-days: 1
+#
+#      - name: Store allure results
+#        uses: actions/upload-artifact@v3
+#        if: always()
+#        with:
+#          name: allure-results
+#          path:
+#            allure-results
+#          retention-days: 1
+#
+#  generate-report:
+#    if: always()
+#    runs-on: ubuntu-latest
+#    needs: run-test
+#    name: Generate report
+#    steps:
+#      - name: Install JDK
+#        uses: actions/setup-java@v3
+#        with:
+#          distribution: 'corretto'
+#          java-version: '17'
+#
+#      - name: Install allure
+#        run: |
+#          sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && sudo tar -zxvf allure-2.29.0.tgz -C /opt/ && sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
+#
 #      - name: Download all workflow run artifacts
 #        uses: actions/download-artifact@v3
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v2
-
-      - name: Deploy to gitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1.2.9
-#        continue-on-error: true
+#
+#      - name: Run allure generate
+#        run: |
+#          allure generate -c allure-results -o _site
+#
+#      - name: Store generated report
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: _site
+#          path:
+#            _site
+#          retention-days: 1
+#
+#  publish-report:
+#    if: always()
+#    runs-on: ubuntu-latest
+#    needs: generate-report
+#    name: Report publication
+#    steps:
+##        only history without content of allure-results
+#      - name: Download _site workflow run artifact
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: _site
+#          path:
+#            _site
+###        full history version with all content of allure-results saved between runs - very slow
+##      - name: Download all workflow run artifacts
+##        uses: actions/download-artifact@v3
+#
+#      - name: Upload Pages artifact
+#        uses: actions/upload-pages-artifact@v2
+#
+#      - name: Deploy to gitHub Pages
+#        id: deployment
+#        uses: actions/deploy-pages@v1.2.9
+##        continue-on-error: true

@@ -3,9 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Allure Page</title>
+    <title>Text Submission with Language Selection</title>
 </head>
 <body>
-<h1>Welcome to the Allure Broker</h1>
+<h1>Enter Text and Select Language</h1>
+<form id="apiForm">
+    <label for="inputText">Enter Text:</label>
+    <input type="text" id="inputText" name="inputText" required>
+
+    <label for="language">Select Language:</label>
+    <select id="language" name="language" required>
+        <option value="ru">Russian</option>
+        <option value="en">English</option>
+    </select>
+
+    <button type="button" onclick="submitForm()">Submit</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+    async function submitForm() {
+        const inputText = document.getElementById('inputText').value;
+        const selectedLanguage = document.getElementById('language').value;
+
+        if (!inputText || !selectedLanguage) {
+            alert('Please enter text and select a language.');
+            return;
+        }
+
+        const data = { inputText, selectedLanguages: [selectedLanguage] };
+
+        try {
+            const response = await fetch('/api/process-text', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                console.log(response.body);
+            }
+
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result.output, null, 2);
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('result').innerText = 'An error occurred. Please try again.';
+        }
+    }
+</script>
 </body>
 </html>
