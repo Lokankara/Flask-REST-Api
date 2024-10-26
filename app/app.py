@@ -11,34 +11,28 @@ client = Client()
 models = ["gpt-4", "gpt-4-turbo", "gpt-4o-mini", "gpt-3.5-turbo"]
 
 def create_app():
-    return Flask(__name__, template_folder='templates')
-#     app.config.from_object('config.Config')
-#
-#     db.init_app(app)
-#     migrate.init_app(app, db)
-#
-#     app.register_blueprint(main)
+    app = Flask(__name__, template_folder='templates')
+    @app.route('/api/process-text', methods=['POST'])
+    def process_text():
+        data = request.json
+        input_text = data['inputText']
+        languages = data['selectedLanguages']
+        results = {}
 
-@app.route('/api/process-text', methods=['POST'])
-def process_text():
-    data = request.json
-    input_text = data['inputText']
-    languages = data['selectedLanguages']
-    results = {}
+        for model in models:
+            try:
+                response = client.chat.completions.create(model=model, messages=[{"role": "user", "content": input_text}])
+                output_text = response['choices'][0]['message']['content']
+                translated_responses = {}
 
-    for model in models:
-        try:
-            response = client.chat.completions.create(model=model, messages=[{"role": "user", "content": input_text}])
-            output_text = response['choices'][0]['message']['content']
-            translated_responses = {}
+                for lang in languages:
+                    translated_responses[lang] = GoogleTranslator(source='en', target=lang).translate(output_text)
 
-            for lang in languages:
-                translated_responses[lang] = GoogleTranslator(source='en', target=lang).translate(output_text)
+                results[model] = translated_responses
 
-            results[model] = translated_responses
+            except Exception as e:
+                print(e)
+                continue
 
-        except Exception as e:
-            print(e)
-            continue
-
-    return jsonify({'output': results})
+        return jsonify({'output': results})
+    return app
