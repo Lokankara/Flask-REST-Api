@@ -30,13 +30,14 @@ def create_app():
                     model=model,
                     messages=[{"role": "user", "content": input_text}]
                 )
-                output_text = response['choices'][0]['message']['content']
+                output_text = response['choices'][0].message.content
                 translated_responses = {}
 
                 for lang in languages:
                     translated_responses[lang] = GoogleTranslator(source='en', target=lang).translate(output_text)
 
                 results[model] = translated_responses
+                print(results)
 
             except Exception as e:
                 results[model] = f"Error: {str(e)}"
@@ -54,6 +55,7 @@ def create_app():
                 prompt=prompt
             )
             image_url = response.data[0].url
+            print(image_url)
             return jsonify({'imageUrl': image_url})
 
         except Exception as e:
