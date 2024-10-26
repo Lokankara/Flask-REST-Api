@@ -11,11 +11,11 @@ client = Client()
 models = ["gpt-4", "gpt-4-turbo", "gpt-4-mini", "gpt-3.5-turbo"]
 
 def create_app():
-     app = Flask(__name__, template_folder='templates')
+    app = Flask(__name__, template_folder='templates')
 
     @app.route('/')
     def index():
-         return render_template('index.html')
+        return render_template('index.html')
 
     @app.route('/api/process-text', methods=['POST'])
     def process_text():
