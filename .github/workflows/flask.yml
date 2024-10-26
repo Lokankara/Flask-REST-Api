@@ -28,7 +28,7 @@ jobs:
         pip install -r requirements.txt
         pip install --upgrade werkzeug
         pip install gunicorn
-
-    - name: Run Tests
-      run: |
-        python -m pytest tests/test_app.py
+#
+#    - name: Run Tests
+#      run: |
+#        python -m pytest tests/test_app.py

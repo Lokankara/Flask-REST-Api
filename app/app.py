@@ -8,10 +8,15 @@ from deep_translator import GoogleTranslator
 # migrate = Migrate()
 
 client = Client()
-models = ["gpt-4", "gpt-4-turbo", "gpt-4o-mini", "gpt-3.5-turbo"]
+models = ["gpt-4", "gpt-4-turbo", "gpt-4-mini", "gpt-3.5-turbo"]
 
 def create_app():
-    app = Flask(__name__, template_folder='templates')
+    app = Flask(__name__)
+
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+
     @app.route('/api/process-text', methods=['POST'])
     def process_text():
         data = request.json
@@ -21,7 +26,10 @@ def create_app():
 
         for model in models:
             try:
-                response = client.chat.completions.create(model=model, messages=[{"role": "user", "content": input_text}])
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": input_text}]
+                )
                 output_text = response['choices'][0]['message']['content']
                 translated_responses = {}
 
@@ -31,8 +39,8 @@ def create_app():
                 results[model] = translated_responses
 
             except Exception as e:
-                print(e)
-                continue
+                results[model] = f"Error: {str(e)}"
 
-        return jsonify({'output': results})
+        return jsonify({'translations': results})
+
     return app
