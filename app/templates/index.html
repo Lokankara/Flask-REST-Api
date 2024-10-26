@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Submission with Language Selection</title>
+    <style>
+        #loader {
+            display: none;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 <body>
 <h1>Enter Text and Select Language</h1>
@@ -19,10 +40,44 @@
 
     <button type="button" onclick="submitForm()">Submit</button>
 </form>
-
+<div id="loader"></div>
 <div id="result"></div>
 
+<h2>Generate Image</h2>
+<form id="imageForm">
+    <label for="imagePrompt">Image Prompt:</label>
+    <input type="text" id="imagePrompt" name="imagePrompt" required>
+    <button type="button" onclick="generateImage()">Generate Image</button>
+</form>
+
+<div id="imageResult"></div>
+
 <script>
+    async function generateImage() {
+        const imagePrompt = document.getElementById('imagePrompt').value;
+        const imageResultDiv = document.getElementById('imageResult');
+        imageResultDiv.innerHTML = '';
+
+        try {
+            const response = await fetch('/api/generate-image', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({prompt: imagePrompt})
+            });
+
+            if (!response.ok) {
+                console.log(response.statusText);
+            }
+
+            const result = await response.json();
+            const imageUrl = result.imageUrl;
+            imageResultDiv.innerHTML = `<img src="${imageUrl}" alt="Generated Image" style="max-width: 100%; height: auto;">`;
+
+        } catch (error) {
+            imageResultDiv.innerHTML = `Error: ${error.message}`;
+        }
+    }
+
     async function submitForm() {
         const inputText = document.getElementById('inputText').value;
         const selectedLanguage = document.getElementById('language').value;
@@ -32,12 +87,12 @@
             return;
         }
 
-        const data = { inputText, selectedLanguages: [selectedLanguage] };
+        const data = {inputText, selectedLanguages: [selectedLanguage]};
 
         try {
             const response = await fetch('/api/process-text', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data)
             });
 

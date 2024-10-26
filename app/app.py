@@ -8,7 +8,7 @@ from deep_translator import GoogleTranslator
 # migrate = Migrate()
 
 client = Client()
-models = ["gpt-4", "gpt-4-turbo", "gpt-4-mini", "gpt-3.5-turbo"]
+models = ["gpt-4-turbo", "gpt-4o-mini", "gpt-3.5-turbo", "gpt-4o"]
 
 def create_app():
     app = Flask(__name__, template_folder='templates')
@@ -42,5 +42,21 @@ def create_app():
                 results[model] = f"Error: {str(e)}"
 
         return jsonify({'translations': results})
+
+    @app.route('/api/generate-image', methods=['POST'])
+    def generate_image():
+        data = request.json
+        prompt = data['prompt']
+
+        try:
+            response = client.images.generate(
+                model="dall-e-3",
+                prompt=prompt
+            )
+            image_url = response.data[0].url
+            return jsonify({'imageUrl': image_url})
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
 
     return app
