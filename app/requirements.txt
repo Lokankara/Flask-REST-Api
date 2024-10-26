@@ -20,4 +20,5 @@ selenium==4.20.0
 pytest==8.1.1
 Faker==24.14.0
 g4f==0.3.3
+g4f[all]
 deep-translator==1.11.4
