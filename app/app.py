@@ -15,7 +15,7 @@ def create_app():
 
     @app.route('/')
     def index():
-        return render_template('index.html')
+         app = Flask(__name__, template_folder='templates')
 
     @app.route('/api/process-text', methods=['POST'])
     def process_text():
