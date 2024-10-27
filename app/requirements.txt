@@ -22,3 +22,4 @@ Faker==24.14.0
 g4f==0.3.3
 g4f[all]
 deep-translator==1.11.4
+markdown==3.7

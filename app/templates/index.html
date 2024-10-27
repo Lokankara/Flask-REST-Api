@@ -5,8 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Submission with Language Selection</title>
     <style>
+	
+        body {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        #inputText {
+            --tw-bg-opacity: 1;
+            background-color: rgb(244 244 244 / var(--tw-bg-opacity));
+        }
+
         #loader {
+            top: 10px;
+            left: 45%;
             display: none;
+            position: absolute;
             border: 8px solid #f3f3f3;
             border-top: 8px solid #3498db;
             border-radius: 50%;
@@ -24,35 +37,49 @@
                 transform: rotate(360deg);
             }
         }
+
     </style>
 </head>
 <body>
-<h1>Enter Text and Select Language</h1>
+<h1>Submit Prompt</h1>
+<label for="language"></label>
+<select id="language" name="language" required>
+    <option value="ru">Russian</option>
+    <option value="en">English</option>
+</select>
 <form id="apiForm">
-    <label for="inputText">Enter Text:</label>
-    <input type="text" id="inputText" name="inputText" required>
-
-    <label for="language">Select Language:</label>
-    <select id="language" name="language" required>
-        <option value="ru">Russian</option>
-        <option value="en">English</option>
-    </select>
-
+    <br>
+    <label for="inputText"></label>
+    <textarea id="inputText" name="inputText" rows="10" cols="50"> </textarea>
+    <br>
     <button type="button" onclick="submitForm()">Submit</button>
 </form>
-<div id="loader"></div>
+<div id="loader" class="spin"></div>
 <div id="result"></div>
 
-<h2>Generate Image</h2>
-<form id="imageForm">
-    <label for="imagePrompt">Image Prompt:</label>
-    <input type="text" id="imagePrompt" name="imagePrompt" required>
-    <button type="button" onclick="generateImage()">Generate Image</button>
-</form>
+<!--<form id="imageForm">-->
+<!--    <label for="imagePrompt">Image Prompt:</label>-->
+<!--    <input type="text" id="imagePrompt" name="imagePrompt" required>-->
+<!--    <button type="button" onclick="generateImage()">Generate Image</button>-->
+<!--</form>-->
 
-<div id="imageResult"></div>
+<!--<div id="imageResult"></div>-->
 
 <script>
+    let result = {};
+    let outputHtml = '';
+    document.getElementById('language').addEventListener('change', translateAndDisplay);
+
+    function translateAndDisplay() {
+        const selectedLanguage = document.getElementById('language').value;
+        for (const [lang, translation] of Object.entries(result['translations'])) {
+            if (lang === selectedLanguage) {
+                outputHtml += `${translation}`;
+            }
+        }
+        document.getElementById('result').innerHTML = outputHtml;
+    }
+
     async function generateImage() {
         const imagePrompt = document.getElementById('imagePrompt').value;
         const imageResultDiv = document.getElementById('imageResult');
@@ -79,34 +106,41 @@
     }
 
     async function submitForm() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'block';
         const inputText = document.getElementById('inputText').value;
-        const selectedLanguage = document.getElementById('language').value;
+        const language = document.getElementById('language').value;
 
-        if (!inputText || !selectedLanguage) {
-            alert('Please enter text and select a language.');
+        if (!inputText) {
+            alert('Please enter text.');
+            loader.style.display = 'none';
             return;
         }
-
-        const data = {inputText, selectedLanguages: [selectedLanguage]};
 
         try {
             const response = await fetch('/api/process-text', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
+                body: JSON.stringify({inputText, language})
             });
 
             if (!response.ok) {
-                console.log(response.body);
+                const errorText = await response.text();
+                console.error(`HTTP error! status: ${response.status}. Details: ${errorText}`);
+                loader.style.display = 'none';
+                return;
             }
 
-            const result = await response.json();
-            document.getElementById('result').innerText = JSON.stringify(result.output, null, 2);
+            result = await response.json();
+            translateAndDisplay();
         } catch (error) {
             console.error('Error:', error);
             document.getElementById('result').innerText = 'An error occurred. Please try again.';
+        } finally {
+            loader.style.display = 'none';
         }
     }
+
 </script>
 </body>
 </html>
