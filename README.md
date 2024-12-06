@@ -56,3 +56,5 @@ https://help.sap.com/docs/SAP_COMMERCE/d0224eca81e249cb821f2cdf45a82ace/8bbbc04e
 https://help.sap.com/docs/SAP_COMMERCE/3fb5dcdfe37f40edbac7098ed40442c0/ab945b81e3474a14bba99169ccfd3d7b.html?locale=en-US
 https://help.sap.com/docs/SAP_COMMERCE/3fb5dcdfe37f40edbac7098ed40442c0/bec6c3a13b1b4ec59cbd4150ebd4df17.html?locale=en-US
 https://help.sap.com/docs/SAP_COMMERCE/3fb5dcdfe37f40edbac7098ed40442c0/e339428f80b74b94bd1a320a9654f7c1.html?locale=en-US
+
+https://help.sap.com/docs/SAP_COMMERCE/d0224eca81e249cb821f2cdf45a82ace/8b9ce4868669101499b2f0f25ef9395f.html?locale=en-US
